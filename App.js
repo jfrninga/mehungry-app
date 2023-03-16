@@ -1,14 +1,42 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
+import React from 'react';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Login from './src/views/Login';
+import Register from './src/views/Register';
+import { StyleSheet } from 'react-native';
+import { Ionicons } from '@expo/vector-icons';
 
-export default function App() {
+const Tab = createBottomTabNavigator();
+
+function App() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-      <StatusBar style="auto" />
-    </View>
+    <NavigationContainer>
+      <Tab.Navigator screenOptions={{ headerShown: false }}>
+        <Tab.Screen
+          name="Login"
+          component={Login}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="log-in-outline" color={color} size={size} />
+            ),
+          }}
+        />
+        <Tab.Screen
+          name="Register"
+          component={Register}
+          options={{
+            tabBarIcon: ({ color, size }) => (
+              <Ionicons name="person-add-outline" color={color} size={size} />
+            ),
+          }}
+        />
+      </Tab.Navigator>
+    </NavigationContainer>
   );
 }
+
+export default App;
+
 
 const styles = StyleSheet.create({
   container: {

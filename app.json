@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "MeHungry",
-    "slug": "MeHungry",
+    "name": "mehungry",
+    "slug": "mehungry",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
