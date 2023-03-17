@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import { Form, FormItem } from 'react-native-form-component'
 
 export default function Register({ navigation }) {

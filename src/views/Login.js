@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { Button, StyleSheet, Text, View } from 'react-native'
+import { StyleSheet, Text, View } from 'react-native'
 import { Form, FormItem } from 'react-native-form-component'
 
 export default function Login({ navigation }) {
@@ -46,7 +46,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  
+
   textInput: {
     borderColor: 'gray',
     borderWidth: 1,
