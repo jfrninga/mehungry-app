@@ -1,20 +1,23 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { createStackNavigator } from '@react-navigation/stack';
 import Login from './src/views/Login';
 import Register from './src/views/Register';
 import { StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { View } from 'react-native';
 import { setContext } from '@apollo/client/link/context';
-import { ApolloClient, ApolloProvider, createHttpLink, HttpLink, InMemoryCache } from '@apollo/client';
+import { ApolloClient, ApolloProvider, createHttpLink, InMemoryCache } from '@apollo/client';
 import * as SecureStore from 'expo-secure-store';
+import Home from './src/screens/Home'
+import connectStore from './src/store/connectStore';
+import Place from './src/views/Place';
+import Places from './src/views/Places';
 
 async function getValueFor(key) {
   return await SecureStore.getItemAsync(key)
 }
 
-const Tab = createBottomTabNavigator();
 
 const httpLink = createHttpLink({
   uri: 'https://digitalcampus.nerdy-bear.com/graphql',
@@ -35,31 +38,44 @@ const client = new ApolloClient({
   cache: new InMemoryCache(),
 });
 
+const Stack = createStackNavigator();
+
 function App() {
+
+  const { connected, setConnected, setDisconnected } = connectStore(); // un Hook pour recupere les valeurs
+
+  useEffect(() => {
+    async function checkToken() {
+      const token = await SecureStore.getItemAsync('token');
+      if (!token) {
+        setConnected(false);
+      } else {
+        setConnected(true);
+      }
+
+      checkToken();
+    } [connected]
+  });
+
   return (
     <ApolloProvider client={client}>
       <View style={styles.container}>
         <NavigationContainer>
-          <Tab.Navigator screenOptions={{ headerShown: false }}>
-            <Tab.Screen
-              name="Login"
-              component={Login}
-              options={{
-                tabBarIcon: ({ color, size }) => (
-                  <Ionicons name="log-in-outline" color={color} size={size} />
-                ),
-              }}
-            />
-            <Tab.Screen
-              name="Register"
-              component={Register}
-              options={{
-                tabBarIcon: ({ color, size }) => (
-                  <Ionicons name="person-add-outline" color={color} size={size} />
-                ),
-              }}
-            />
-          </Tab.Navigator>
+          <Stack.Navigator screenOptions={{ headerShown: false }}>
+            {connected && (
+              <>
+                <Stack.Screen name="Home" component={Home} />
+                <Stack.Screen name="Places" component={Places} />
+                <Stack.Screen name="Place" component={Place} />
+              </>
+            )}
+            {!connected && (
+              <>
+                <Stack.Screen name="Login" component={Login} />
+                <Stack.Screen name="Register" component={Register} />
+              </>
+            )}
+          </Stack.Navigator>
         </NavigationContainer>
       </View>
     </ApolloProvider>

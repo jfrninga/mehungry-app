@@ -18,10 +18,10 @@ const REGISTER_USER = gql`
 
 export default function Register({ navigation }) {
     const [form, setForm] = useState({
-        username: 'jfr4',
-        email: 'jfr@jfr4.fr',
-        password: '1234azerty',
-        confirmPassword: '1234azerty'
+        username: '',
+        email: '',
+        password: '',
+        confirmPassword: ''
     })
 
     const [register, { data, loading, error }] = useMutation(REGISTER_USER);

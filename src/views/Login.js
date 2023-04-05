@@ -1,8 +1,9 @@
 import { gql, useMutation } from '@apollo/client'
-import { useState } from 'react'
-import { Alert, StyleSheet, Text, View } from 'react-native'
+import { useEffect, useState } from 'react'
+import { StyleSheet, Text, View } from 'react-native'
 import { Form, FormItem } from 'react-native-form-component'
 import * as SecureStore from 'expo-secure-store'
+import connectStore from '../store/connectStore'
 
 const LOGIN_USER = gql`
   mutation loginUser($input: UsersPermissionsLoginInput!) {
@@ -23,9 +24,13 @@ export default function Login({ navigation }) {
     password: 'azerty1234',
   })
 
+  const { setConnected } = connectStore();
+
   const [login, { data, loading, error }] = useMutation(LOGIN_USER);
 
-  if (loading) return <Text>Submitting...</Text>;
+  if (loading) return <Text style={{
+    padding: 40,
+  }}>Submitting...</Text>;
   if (error) return <Text style={{
     padding: 40,
   }}>Submission error! ${error.message}</Text>
@@ -33,7 +38,7 @@ export default function Login({ navigation }) {
   const handleLogin = async () => {
     try {
       console.log('form', form);
-      const {data} = await login({
+      const { data } = await login({
         variables: {
           input: {
             identifier: form.username,
@@ -45,10 +50,7 @@ export default function Login({ navigation }) {
       console.log(data)
       await SecureStore.setItemAsync('token', data.login.jwt);
       await SecureStore.setItemAsync('user', JSON.stringify(data.login.user));
-
-      if (data) {
-        Alert.alert('Success', 'You have successfully logged in');
-      }
+      setConnected(true);
     } catch (error) {
       console.log(error);
     }
